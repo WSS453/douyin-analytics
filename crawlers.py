@@ -29,6 +29,20 @@ class DouyinCrawler:
         
         # 模拟数据（用于演示和开发测试）
         self._demo_mode = True
+        self.cookie = None
+        
+    def set_cookie(self, cookie: str):
+        """设置Cookie用于真实数据采集"""
+        self.cookie = cookie
+        print(f"✅ Cookie已设置: {len(cookie)} 字符")
+        
+    def enable_real_mode(self):
+        """启用真实数据模式"""
+        self._demo_mode = False
+        
+    def enable_demo_mode(self):
+        """启用模拟数据模式"""
+        self._demo_mode = True
         
     def search_blogger(self, query: str, search_type: str = "博主名称") -> Optional[Dict]:
         """
@@ -41,21 +55,28 @@ class DouyinCrawler:
         Returns:
             博主信息字典 或 None
         """
-        if self._demo_mode:
-            return self._get_demo_blogger(query)
+        # 如果启用了真实数据模式且有Cookie
+        if not self._demo_mode and self.cookie:
+            real_result = self._search_real_blogger(query, search_type)
+            if real_result:
+                return real_result
         
-        try:
-            # 实际采集逻辑（需要逆向API）
-            # 这里使用模拟数据作为演示
-            
-            # 如果有真实的API，可以在这里实现
-            # 参考：MediaCrawler 项目
-            
-            return self._get_demo_blogger(query)
-            
-        except Exception as e:
-            print(f"搜索博主失败: {e}")
-            return self._get_demo_blogger(query)
+        # 使用模拟数据
+        return self._get_demo_blogger(query)
+    
+    def _search_real_blogger(self, query: str, search_type: str) -> Optional[Dict]:
+        """
+        真实搜索博主（使用Cookie）
+        
+        注意：由于Streamlit Cloud无法运行浏览器，
+        真实数据采集需要在本地环境使用浏览器自动化
+        """
+        import streamlit as st
+        
+        st.warning("⚠️ 真实数据采集需要在本地环境运行")
+        st.info("💡 请使用本地脚本或在支持浏览器的环境中运行")
+        
+        return None
     
     def get_blogger_videos(self, sec_uid: str, days: int = 30) -> List[Dict]:
         """
@@ -68,16 +89,28 @@ class DouyinCrawler:
         Returns:
             视频列表
         """
-        if self._demo_mode:
-            return self._get_demo_videos(days)
+        # 如果启用了真实数据模式且有Cookie
+        if not self._demo_mode and self.cookie:
+            real_videos = self._get_real_videos(sec_uid, days)
+            if real_videos:
+                return real_videos
         
-        try:
-            # 实际采集逻辑
-            return self._get_demo_videos(days)
-            
-        except Exception as e:
-            print(f"获取视频失败: {e}")
-            return self._get_demo_videos(days)
+        # 使用模拟数据
+        return self._get_demo_videos(days)
+    
+    def _get_real_videos(self, sec_uid: str, days: int) -> List[Dict]:
+        """
+        真实获取视频数据（使用Cookie）
+        
+        注意：由于Streamlit Cloud无法运行浏览器，
+        真实数据采集需要在本地环境使用浏览器自动化
+        """
+        import streamlit as st
+        
+        st.warning("⚠️ 真实数据采集需要在本地环境运行")
+        st.info("💡 请使用本地脚本或在支持浏览器的环境中运行")
+        
+        return []
     
     def _get_demo_blogger(self, query: str) -> Dict:
         """

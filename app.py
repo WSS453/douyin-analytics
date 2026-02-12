@@ -63,6 +63,43 @@ def main():
         
         st.markdown("---")
         
+        # Cookie设置
+        st.header("🍪 Cookie设置")
+        
+        with st.expander("📖 如何获取Cookie？", expanded=False):
+            st.markdown("""
+            ### 获取步骤：
+            1. 电脑浏览器打开 https://www.douyin.com
+            2. **扫码登录**你的抖音账号
+            3. 按 **F12** 打开开发者工具
+            4. 点击 **"Network"** 标签
+            5. 按 **F5** 刷新页面
+            6. 找到请求，复制 **Cookie** 值
+            7. 粘贴到下方输入框
+            """)
+        
+        cookie_input = st.text_area(
+            "粘贴抖音Cookie",
+            placeholder="复制浏览器中的Cookie值...",
+            height=100,
+            help="获取方法见上方说明"
+        )
+        
+        if cookie_input:
+            st.session_state.cookie = cookie_input
+            st.success("✅ Cookie已设置")
+        
+        use_real_data = st.checkbox(
+            "使用真实数据",
+            value=False,
+            help="勾选后使用Cookie获取真实数据（需要先设置Cookie）"
+        )
+        
+        if use_real_data and not cookie_input:
+            st.warning("⚠️ 请先设置Cookie才能使用真实数据")
+        
+        st.markdown("---")
+        
         # 缓存管理
         st.header("💾 数据管理")
         if st.button("清除缓存数据", use_container_width=True):
@@ -74,6 +111,11 @@ def main():
         st.markdown("---")
         st.caption("🎯 数据来源：抖音公开数据")
         st.caption("📊 分析维度：点赞、评论、分享")
+        
+        # 设置数据源模式
+        if 'use_real_data' not in st.session_state:
+            st.session_state.use_real_data = False
+        st.session_state.use_real_data = use_real_data
     
     # 主内容区
     if search_btn and search_query:
